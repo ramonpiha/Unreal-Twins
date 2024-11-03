@@ -1,0 +1,53 @@
+[
+  {
+    "tenant-id": "DEFAULT_TENANT",
+    "trusted-ca": [
+      {
+        "subject-dn": "CN=DEFAULT_TENANT_CA,OU=Hono,O=Eclipse IoT,L=Ottawa,C=CA",
+        "public-key": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAElNXF6jy6KA1oe3KVYOCcT1+cF7B+IAOwo7MvVcaoLAvhJi/d2YDVw2NSfSOBpX+M0de8tIx4b7J6e/li2pKafQ==",
+        "algorithm": "EC",
+        "not-before": "2021-07-19T17:36:55+02:00",
+        "not-after": "2022-07-19T17:36:55+02:00"
+      }
+    ],
+    "enabled": true,
+    "resource-limits": {
+      "max-connections": 100,
+      "max-ttl": 20,
+      "data-volume": {
+        "effective-since": "2020-01-01T00:00:00+00:00",
+        "max-bytes": 1000000000,
+        "period": {
+          "mode": "days",
+          "no-of-days": 7
+        }
+      }
+    }
+  },
+  {
+    "tenant-id": "HTTP_TENANT",
+    "enabled": true,
+    "adapters": [
+      {
+        "type": "hono-http",
+        "enabled": true,
+        "device-authentication-required": true
+      },
+      {
+        "type": "hono-mqtt",
+        "enabled": false,
+        "device-authentication-required": true
+      },
+      {
+        "type": "hono-kura",
+        "enabled": false,
+        "device-authentication-required": true
+      },
+      {
+        "type": "hono-coap",
+        "enabled": false,
+        "device-authentication-required": true
+      }
+    ]
+  }
+]

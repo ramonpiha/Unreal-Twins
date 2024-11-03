@@ -1,0 +1,70 @@
+baseurl = "https://www.eclipse.org/hono/docs/"
+
+languageCode = "en-us"
+title = "Eclipse Hono&trade;"
+theme = "hugo-theme-relearn"
+metadataformat = "toml"
+canonifyurls = false
+# Enable Google Analytics by entering your tracking id
+googleAnalytics = "GTM-5WLCZXC"
+pluralizeListTitles = "false"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[params]
+  # General information
+  author = "The Eclipse Hono Project"
+  description = "A set of micro-services for connecting millions of devices."
+  copyright = "The Eclipse Hono Project"
+
+  # used in shortcode "homelink" to create absoulte URL for links into the home page
+  homeBaseUrl = "https://www.eclipse.org/hono/"
+
+  # Prefix URL to edit current page. Will display an "Edit this page" button on top right hand corner of every page.
+  # Useful to give opportunity to people to create merge request for your doc.
+  # See the config.toml file from this documentation site to have an example.
+  editURL = "https://github.com/eclipse-hono/hono/edit/master/site/documentation/content/"
+  # Shows a checkmark for visited pages on the menu
+  showVisitedLinks = false
+  # Disable search function. It will hide search bar
+  disableSearch = false
+  # Besides the pseudo languages mapped to Hono versions, "en" needs to be defined so that the index for the
+  # documentation search function can be initialized with a supported language (see initLunr() in Relearn theme search.js).
+  additionalContentLanguage = [ "en" ]
+  # Javascript and CSS cache are automatically busted when new version of site is generated.
+  # Set this to true to disable this behavior (some proxies don't handle well this optimization)
+  disableAssetsBusting = false
+  # Set this to true to disable copy-to-clipboard button for inline code.
+  disableInlineCopyToClipBoard = true
+  # A title for shortcuts in menu is set by default. Set this to true to disable it.
+  disableShortcutsTitle = true
+  # do not show Home button above left hand side navigation menu
+  disableLandingPageButton = true
+  # When using mulitlingual website, disable the switch language button.
+  disableLanguageSwitchingButton = false
+  # Hide breadcrumbs in the header and only show the current page title
+  disableBreadcrumb = false
+  # Hide Next and Previous page buttons normally displayed full height beside content
+  disableNextPrev = true
+  # Order sections in menu by "weight" or "title". Default to "weight"
+  ordersectionsby = "weight"
+  # Change default color scheme with a variant one. Can be "red", "blue", "green".
+  themeVariant = "hono"
+
+  # Twitter
+  twitter = "EclipseHono"
+  twitterImage = "images/twitter_image.png"
+
+[outputs]
+  home = [ "HTML", "RSS", "JSON"]
+
+# Menu Shortcuts
+[[menu.shortcuts]]
+name = "<i class='fas fa-home'></i> Hono Home"
+url = "https://www.eclipse.org/hono/"
+title = "Hono's Homepage"
+weight = 10
+

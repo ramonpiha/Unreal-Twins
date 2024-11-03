@@ -1,0 +1,129 @@
+/* replace fa-languag icon with fa-code-branch icon */
+#sidebar i.fa-language::before {
+  content: "\f126";
+}
+
+/* alert classes are used by the (deprecated) "note" and "warning" short codes only */
+.alert {
+  padding-left: 1.4rem;
+  padding-right: 1.4rem;
+  border: 1px solid;
+  border-radius: .25rem;
+}
+
+.alert .alert-heading {
+  color: inherit !important;
+}
+
+.alert-notice {
+  background-color: #c4dfff;
+  border-color: #5fb4fc;
+}
+
+.alert-warning {
+  background-color: #f89691;
+  border-color: #e84e40;
+}
+
+#footer div.eclipse-logo {
+  max-width: 220px;
+}
+
+#footer p {
+  margin-left: 1rem;
+}
+
+.logo-img {
+  width: 160px;
+  padding-top: 6px;
+}
+
+.cc-revoke.cc-bottom {
+  left: 16em; /* Move the Cookie button out of the menu bar */
+}
+
+#sidebar {
+  box-shadow: 2px 0 2px gray;
+}
+
+#sidebar #shortcuts li {
+  font-size: 18px;
+}
+
+#sidebar #footer {
+  color: black;
+}
+
+#sidebar #footer a {
+  color: #c55c04;
+  color: var(--MAIN-LINK-color);
+}
+
+#sidebar #footer a:hover {
+  color: #f08712;
+  color: var(--MAIN-LINK-HOVER-color) !important;
+}
+
+.old-version-hint p {
+  background-color: #efff77;
+  font-weight: bolder;
+  text-align: center;
+  padding: 10px !important;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.select-style svg {
+  fill: #f08712;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+  margin: auto;
+}
+
+#select-box-wrapper {
+  text-align: right;
+  padding: 1rem;
+}
+
+#select-box {
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+/* do not display Swagger UI top bar and server selection box*/
+.swagger-ui .topbar, .swagger-ui div.scheme-container, .swagger-ui hgroup.main, .swagger-ui .info__license, .swagger-ui .info__contact, .swagger-ui .info__extdocs {
+	display: none;
+}
+
+/* let text after try-out button stay in same line */
+.swagger-ui .try-out {
+  padding-right: 7px;
+  display: inline-block;
+}
+
+.swagger-ui table, .swagger-ui thead, .swagger-ui td {
+	border: none;
+}
+
+/* override heading style theme defaults to fit Swagger UI layout */
+#swagger-ui h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 0px;
+  overflow-x: visible;
+}
+
+/* no reduced letter-spacing for small text in Swagger UI heading */
+#swagger-ui h3 small {
+  letter-spacing: 0px;
+}
+
+/* prevents that the anchor is positioned behind the menu bar */
+:target:before {
+  content: "";
+  display: block;
+  height: 60px;
+  margin: -60px 0 0;
+}

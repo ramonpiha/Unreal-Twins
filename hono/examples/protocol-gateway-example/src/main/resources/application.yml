@@ -1,0 +1,26 @@
+gateway:
+  tcp:
+   insecurePort: 6666
+   insecurePortBindAddress: "127.0.0.1"
+  amqp:
+    host: hono.eclipseprojects.io
+    port: 5671
+    tlsEnabled: true
+    username: gw@DEFAULT_TENANT
+    password: gw-secret
+    serverRole: AMQP adapter
+
+quarkus:
+  console:
+    color: true
+  log:
+    level: INFO
+    min-level: TRACE
+    category:
+      "io.quarkus.vertx.core.runtime":
+        level: DEBUG
+  vertx:
+    prefer-native-transport: true
+    warning-exception-time: "PT1.5S"
+    resolver:
+      cache-max-time-to-live: 0

@@ -1,0 +1,115 @@
+hono:
+  app:
+    maxInstances: 1
+    amqpMessagingDisabled: ${hono.amqp-messaging.disabled}
+    kafkaMessagingDisabled: ${hono.kafka-messaging.disabled}
+  connectionEvents:
+    producer: "none"
+  coap:
+    authenticationRequired: false
+    bindAddress: "0.0.0.0"
+    port: 5684
+    keyPath: "/opt/hono/config/certs/coap-adapter-key.pem"
+    certPath: "/opt/hono/config/certs/coap-adapter-cert.pem"
+    insecurePortBindAddress: "0.0.0.0"
+    insecurePort: 5683
+    maxConnections: 100
+    maxPayloadSize: 2048
+  messaging:
+    name: 'Hono CoAP Adapter'
+    host: "${hono.amqp-network.host}"
+    port: 5673
+    amqpHostname: "hono-internal"
+    keyPath: "/opt/hono/config/certs/coap-adapter-key.pem"
+    certPath: "/opt/hono/config/certs/coap-adapter-cert.pem"
+    trustStorePath: "/opt/hono/config/certs/trusted-certs.pem"
+    linkEstablishmentTimeout: ${link.establishment.timeout}
+    flowLatency: ${flow.latency}
+    requestTimeout: ${request.timeout}
+  registration:
+    name: 'Hono CoAP Adapter'
+    host: "${hono.registration.host}"
+    port: 5672
+    username: "coap-adapter@HONO"
+    password: "coap-secret"
+    linkEstablishmentTimeout: ${link.establishment.timeout}
+    flowLatency: ${flow.latency}
+    requestTimeout: ${request.timeout}
+  credentials:
+    name: 'Hono CoAP Adapter'
+    host: "${hono.registration.host}"
+    port: 5672
+    username: "coap-adapter@HONO"
+    password: "coap-secret"
+    linkEstablishmentTimeout: ${link.establishment.timeout}
+    flowLatency: ${flow.latency}
+    requestTimeout: ${request.timeout}
+  tenant:
+    name: 'Hono CoAP Adapter'
+    host: "${hono.registration.host}"
+    port: 5672
+    username: "coap-adapter@HONO"
+    password: "coap-secret"
+    # we need to disable caching of tenant lookup results
+    # in order to allow registration of non-matching trust anchors
+    # leaving the cache "poisoned" when looking up a tenant using
+    # the same issuer DN in subsequent test cases
+    responseCacheMinSize: 0
+    responseCacheMaxSize: 0
+    linkEstablishmentTimeout: ${link.establishment.timeout}
+    flowLatency: ${flow.latency}
+    requestTimeout: ${request.timeout}
+  commandRouter:
+    name: 'Hono CoAP Adapter'
+    host: "${hono.commandrouter.host}"
+    port: 5672
+    username: "coap-adapter@HONO"
+    password: "coap-secret"
+    linkEstablishmentTimeout: ${link.establishment.timeout}
+    flowLatency: ${flow.latency}
+    requestTimeout: ${request.timeout}
+  command:
+    name: 'Hono CoAP Adapter'
+    host: "${hono.amqp-network.host}"
+    port: 5673
+    amqpHostname: "hono-internal"
+    keyPath: "/opt/hono/config/certs/coap-adapter-key.pem"
+    certPath: "/opt/hono/config/certs/coap-adapter-cert.pem"
+    trustStorePath: "/opt/hono/config/certs/trusted-certs.pem"
+    linkEstablishmentTimeout: ${link.establishment.timeout}
+    flowLatency: ${flow.latency}
+    requestTimeout: ${request.timeout}
+  kafka:
+    commonClientConfig:
+      bootstrap.servers: "${hono.kafka.bootstrap.servers}"
+    commandResponse:
+      producerConfig:
+        max.block.ms: ${kafka-client.producer.max-block-ms}
+        request.timeout.ms: ${kafka-client.producer.request-timeout-ms}
+        delivery.timeout.ms: ${kafka-client.producer.delivery-timeout-ms}
+    telemetry:
+      producerConfig:
+        max.block.ms: ${kafka-client.producer.max-block-ms}
+        request.timeout.ms: ${kafka-client.producer.request-timeout-ms}
+        delivery.timeout.ms: ${kafka-client.producer.delivery-timeout-ms}
+    event:
+      producerConfig:
+        max.block.ms: ${kafka-client.producer.max-block-ms}
+        request.timeout.ms: ${kafka-client.producer.request-timeout-ms}
+        delivery.timeout.ms: ${kafka-client.producer.delivery-timeout-ms}
+
+quarkus:
+  otel:
+    exporter:
+      otlp:
+        endpoint: "${otel-collector.endpoint}"
+  console:
+    color: true
+  log:
+    level: INFO
+    min-level: TRACE
+    category:
+      "io.quarkus.vertx.core.runtime":
+        level: DEBUG
+  vertx:
+    max-event-loop-execute-time: ${max.event-loop.execute-time}

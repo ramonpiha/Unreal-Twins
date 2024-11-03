@@ -1,0 +1,43 @@
+*                                     @sophokles73
+
+/adapter-base/                        @dejanb @sophokles73
+
+/adapters/                            @calohmn @kaniyan
+/adapters/amqp/                       @calohmn
+
+/adapters/coap/                       @sophokles73
+
+/adapters/http/                       @ctron @calohmn
+/adapters/http-base/                  @ctron @calohmn
+
+/adapters/lora/                       @calohmn
+
+/adapters/mqtt/                       @ctron @kaniyan
+/adapters/mqtt-base/                  @ctron @kaniyan
+
+/adapters/sigfox/                     @ctron
+
+/cli/                                 @sophokles73
+/client/                              @calohmn
+/client-device-connection-infinispan/ @calohmn @sophokles73
+
+/clients/                             @calohmn
+
+/deploy/                              @dejanb
+/deploy/src/main/deploy/openshift/    @ctron 
+/deploy/src/main/sandbox/             @sophokles73
+
+/examples/                            @kaniyan
+
+/service-base/                        @dejanb @sophokles73
+
+/services/                            @dejanb @kaniyan
+/services/base-jdbc/                  @ctron
+/services/command-router/             @calohmn
+/services/device-registry-base/       @kaniyan
+/services/device-registry-jdbc/       @ctron
+/services/device-registry-mongodb/    @kaniyan
+
+/site/                                @kaniyan @sophokles73
+/test-utils/                          @calohmn
+

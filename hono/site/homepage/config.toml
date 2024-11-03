@@ -1,0 +1,114 @@
+baseurl = "https://www.eclipse.org/hono/"
+languageCode = "en-us"
+title = "Eclipse Hono&trade;"
+theme = "hugo-universal-theme"
+metadataformat = "toml"
+canonifyurls = false
+googleAnalytics = "GTM-5WLCZXC"
+pluralizeListTitles = "false"
+
+[privacy]
+  [privacy.disqus]
+    disable = true
+  [privacy.googleAnalytics]
+    anonymizeIP = false
+    disable = true
+    respectDoNotTrack = false
+    useSessionStorage = false
+  [privacy.instagram]
+    disable = true
+    simple = false
+  [privacy.twitter]
+    disable = true
+    enableDNT = false
+    simple = false
+  [privacy.vimeo]
+    disable = true
+    enableDNT = false
+    simple = false
+  [privacy.youtube]
+    disable = true
+    privacyEnhanced = false
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[[menu.main]]
+    name = "Getting Started"
+    weight = 110
+    url  = "/docs/getting-started/"
+
+[[menu.main]]
+    name = "Documentation"
+    weight = 120
+    url  = "/docs/"
+
+[params]
+    author = "The Eclipse Hono Project"
+    copyright = "&copy; 2019-2022 The Eclipse Hono Project"
+    disabled_logo = false
+    logo = "img/HONO-Logo_Bild-Wort_quer-s-310x120px.svg"
+    logo_text = "Home"
+    logo_small = "img/HONO-Logo_Bild-Wort_quer-s-310x120px.svg"
+    viewMorePostLink = "/blog/"
+    defaultKeywords = []
+    defaultDescription = "Eclipse Hono provides means for connecting millions of IoT devices using arbitrary protocols and interacting with them via uniform APIs."
+
+    # used in shortcode "doclink" to create absoulte URLs for links into the documentation
+    docsBaseUrl = "https://www.eclipse.org/hono/docs"
+
+    # Twitter
+    twitter_site = "EclipseHono"
+
+    # Style options: default (light-blue), blue, green, marsala, pink, red, turquoise, violet
+    style = "default"
+
+    # Format dates with Go's time formatting
+    date_format = "January 2, 2006"
+
+# Enable or disable top bar with social icons
+[params.topbar]
+    enable = false
+
+# Enable and disable widgets for the right sidebar
+[params.widgets]
+    categories = false
+    tags = false
+    search = false
+
+[params.carouselHomepage]
+    enable = false
+    # All carousel items are defined in their own files. You can find example items
+    # at 'exampleSite/data/carousel'.
+    # For more information take a look at the README.
+
+[params.features]
+    enable = true
+    cols = 3
+    # All features are defined in their own files. You can find example items
+    # at 'exampleSite/data/features'.
+    # For more information take a look at the README.
+
+[params.testimonials]
+    enable = false
+    # All testimonials are defined in their own files. You can find example items
+    # at 'exampleSite/data/testimonials'.
+    # For more information take a look at the README.
+    title = "Testimonials"
+    subtitle = "Have a look what happy users said about Hono."
+
+[params.see_more]
+    enable = false
+
+[params.clients]
+    enable = true
+    # All clients are defined in their own files. You can find example items
+    # at 'exampleSite/data/clients'.
+    # For more information take a look at the README.
+    title = "Who is using Eclipse Hono?"
+    subtitle = ""
+
+[params.recent_posts]
+    enable = false

@@ -1,0 +1,17 @@
+**/target/
+**/.idea/
+**/*.iml
+**/.vscode/
+**/bin/
+**/.vertx/
+**/.factorypath
+**/.env
+
+# Eclipse files
+**/.classpath
+**/.project
+**/.settings/
+.checkstyle
+
+# OS files
+.DS_Store

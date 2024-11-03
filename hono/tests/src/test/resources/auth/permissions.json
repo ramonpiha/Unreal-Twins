@@ -1,0 +1,274 @@
+{
+  "roles": {
+    "protocol-adapter": [
+      {
+        "resource": "telemetry/*",
+        "activities": [ "WRITE" ]
+      },
+      {
+        "resource": "event/*",
+        "activities": [ "WRITE" ]
+      },
+      {
+        "resource": "registration/*",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "registration/*:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "resource": "credentials/*",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "credentials/*:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "resource": "tenant",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "tenant/*:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "resource": "cmd_router/*",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "cmd_router/*:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "resource": "device_con/*",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "device_con/*:*",
+        "activities": [ "EXECUTE" ]
+      }
+    ],
+    "command-router": [
+      {
+        "resource": "tenant",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "tenant/*:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "resource": "registration/*",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "registration/*:*",
+        "activities": [ "EXECUTE" ]
+      }
+    ],
+    "DEFAULT_TENANT-manager": [
+      {
+        "resource": "registration/DEFAULT_TENANT",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "registration/DEFAULT_TENANT:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "resource": "credentials/DEFAULT_TENANT",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "credentials/DEFAULT_TENANT:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "resource": "telemetry/DEFAULT_TENANT",
+        "activities": [ "WRITE" ]
+      },
+      {
+        "resource": "event/DEFAULT_TENANT",
+        "activities": [ "WRITE" ]
+      },
+      {
+        "resource": "tenant",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "tenant/DEFAULT_TENANT:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "operation": "tenant/NON_EXISTING_TENANT:*",
+        "activities": [ "EXECUTE" ]
+      },
+      {
+        "resource": "device_con/DEFAULT_TENANT",
+        "activities": [ "READ", "WRITE" ]
+      },
+      {
+        "operation": "device_con/DEFAULT_TENANT:*",
+        "activities": [ "EXECUTE" ]
+      }
+    ],
+    "connector": [
+      {
+        "resource": "telemetry/DEFAULT_TENANT/fluxcapacitor",
+        "activities": [ "WRITE" ]
+      }
+    ],
+    "provisioner": [
+      {
+        "resource": "registration/DEFAULT_TENANT",
+        "activities": [ "READ" ]
+      },
+      {
+        "resource": "registration/DEFAULT_TENANT/fluxcapacitor",
+        "activities": [ "WRITE" ]
+      }
+    ],
+    "application": [
+      {
+        "resource": "telemetry/*",
+        "activities": [ "READ" ]
+      },
+      {
+        "resource": "event/*",
+        "activities": [ "READ" ]
+      },
+      {
+        "resource": "command/*",
+        "activities": [ "WRITE" ]
+      },
+      {
+        "resource": "command_response/*",
+        "activities": [ "READ" ]
+      }
+    ],
+    "DEFAULT_TENANT-application": [
+      {
+        "resource": "telemetry/DEFAULT_TENANT",
+        "activities": [ "READ" ]
+      }, {
+        "resource": "event/DEFAULT_TENANT",
+        "activities": [ "READ" ]
+      },
+      {
+        "resource": "command/DEFAULT_TENANT",
+        "activities": [ "WRITE" ]
+      },
+      {
+        "resource": "command_response/DEFAULT_TENANT",
+        "activities": [ "READ" ]
+      }
+    ],
+    "notification-test": [
+      {
+        "resource": "notification/*",
+        "activities": [ "READ" ]
+      }
+    ]
+  },
+  "users": {
+    "http-adapter@HONO": {
+      "mechanism": "PLAIN",
+      "password": "http-secret",
+      "authorities": [
+        "hono-component",
+        "protocol-adapter"
+      ]
+    },
+    "lora-adapter@HONO": {
+      "mechanism": "PLAIN",
+      "password": "lora-secret",
+      "authorities": [
+        "hono-component",
+        "protocol-adapter"
+      ]
+    },
+    "mqtt-adapter@HONO": {
+      "mechanism": "PLAIN",
+      "password": "mqtt-secret",
+      "authorities": [
+        "hono-component",
+        "protocol-adapter"
+      ]
+    },
+    "amqp-adapter@HONO": {
+      "mechanism": "PLAIN",
+      "password": "amqp-secret",
+      "authorities": [
+        "hono-component",
+        "protocol-adapter"
+      ]
+    },
+    "coap-adapter@HONO": {
+      "mechanism": "PLAIN",
+      "password": "coap-secret",
+      "authorities": [
+        "hono-component",
+        "protocol-adapter"
+      ]
+    },
+    "command-router@HONO": {
+      "mechanism": "PLAIN",
+      "password": "cmd-router-secret",
+      "authorities": [
+        "hono-component",
+        "command-router"
+      ]
+    },
+    "hono-client": {
+      "mechanism": "PLAIN",
+      "password": "secret",
+      "authorities": [
+        "DEFAULT_TENANT-manager"
+      ]
+    },
+    "honodr-client": {
+      "mechanism": "PLAIN",
+      "password": "secret",
+      "authorities": [
+        "DEFAULT_TENANT-manager"
+      ]
+    },
+    "connector-client": {
+      "mechanism": "PLAIN",
+      "password": "connector-secret",
+      "authorities": [
+        "connector"
+      ]
+    },
+    "provisioner-client": {
+      "mechanism": "PLAIN",
+      "password": "secret",
+      "authorities": [
+        "provisioner"
+      ]
+    },
+    "consumer@HONO": {
+      "mechanism": "PLAIN",
+      "password": "verysecret",
+      "authorities": [
+        "application"
+      ]
+    },
+    "user1@HONO": {
+      "mechanism": "PLAIN",
+      "password": "pw",
+      "authorities": [
+        "DEFAULT_TENANT-application"
+      ]
+    },
+    "notification-test": {
+      "mechanism": "PLAIN",
+      "password": "pw",
+      "authorities": [
+        "notification-test"
+      ]
+    }
+  }
+}

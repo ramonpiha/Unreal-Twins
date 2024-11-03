@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  mongodb:
+    image: "mongo"
+    ports:
+      - 27017:27017
+    container_name: sensorLogs
+    volumes:
+      - ./data:/data/db
+
+  backend:
+    container_name: writeAPI
+    image: maven:3.8.1-openjdk-17
+    volumes:
+      - ./writeAPI:/app
+    working_dir: /app
+    command: ["mvn", "spring-boot:run"]
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=mydatabase
+    ports:
+      - 8081:8081
+
+  dtapi:
+    container_name: readAPI
+    image: maven:3.8.1-openjdk-17
+    volumes:
+      - ./readAPI:/app
+    working_dir: /app
+    command: ["mvn", "spring-boot:run"]
+    depends_on:
+      - mongodb
+    environment:
+      - SPRING_DATA_MONGODB_HOST=mongodb
+      - SPRING_DATA_MONGODB_PORT=27017
+      - SPRING_DATA_MONGODB_DATABASE=mydatabase
+    ports:
+      - 8080:8080

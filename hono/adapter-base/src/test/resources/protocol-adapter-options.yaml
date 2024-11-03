@@ -1,0 +1,5 @@
+hono:
+  adapter:
+    mapperEndpoints:
+      telemetry:
+        uri: "https://mapper.eclipseprojects.io/telemetry"

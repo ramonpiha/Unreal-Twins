@@ -1,0 +1,129 @@
+<!--
+    Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+   
+    See the NOTICE file(s) distributed with this work for additional
+    information regarding copyright ownership.
+   
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0
+   
+    SPDX-License-Identifier: EPL-2.0
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.eclipse.hono</groupId>
+    <artifactId>hono-services</artifactId>
+    <version>2.6.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>hono-service-auth-base</artifactId>
+  <name>Hono Auth base</name>
+  <description>Base classes for implementing the Hono Authentication API.</description>
+
+  <properties>
+    <!-- do not delegate verification of credentials to Authentication server -->
+    <hono.auth>implementation</hono.auth>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>hono-service-base</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.vertx</groupId>
+          <artifactId>vertx-web-client</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.github.ben-manes.caffeine</groupId>
+          <artifactId>caffeine</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+     <groupId>org.eclipse.hono</groupId>
+     <artifactId>hono-client-amqp-connection</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.smallrye.config</groupId>
+      <artifactId>smallrye-config</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-auth-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-resteasy-reactive-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
+    </dependency>
+
+    <!-- testing -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-junit5</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.truth</groupId>
+      <artifactId>truth</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>core-test-utils</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <!-- 
+          Copy legal documents from "legal" module to "target/classes" folder
+          so that we make sure to include legal docs in all modules.
+         -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              Execution and configuration for copying certificates from related module
+              to "target/classes" folder so that we can use them in test cases.
+             -->
+            <id>copy_demo_certs</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeArtifactIds>hono-demo-certs</includeArtifactIds>
+              <outputDirectory>${project.build.directory}/certs</outputDirectory>
+              <excludes>META-INF/**</excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jboss.jandex</groupId>
+        <artifactId>jandex-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

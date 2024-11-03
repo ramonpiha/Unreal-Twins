@@ -1,0 +1,6 @@
+hono:
+  http:
+    authenticationRequired: false
+    maxPayloadSize: 4096
+    realm: "test-realm"
+    idleTimeout: 30

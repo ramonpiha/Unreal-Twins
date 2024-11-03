@@ -1,0 +1,33 @@
+hono:
+  app:
+    maxInstances: 1
+  auth:
+    amqp:
+      bindAddress: "0.0.0.0"
+      keyPath: "/opt/hono/config/certs/auth-server-key.pem"
+      certPath: "/opt/hono/config/certs/auth-server-cert.pem"
+      nativeTlsRequired: ${hono.auth-server.nativeTlsRequired}
+    svc:
+      permissionsPath: "/opt/hono/config/permissions.json"
+      signing:
+        # extend token expiration to 1h in order to prevent
+        # connection loss during test execution
+        tokenExpiration: 3600
+        audience: "hono-components"
+      supportedSaslMechanisms: "PLAIN"
+
+quarkus:
+  otel:
+    exporter:
+      otlp:
+        endpoint: "${otel-collector.endpoint}"
+  console:
+    color: true
+  log:
+    level: INFO
+    min-level: TRACE
+    category:
+      "io.quarkus.vertx.core.runtime":
+        level: DEBUG
+  vertx:
+    max-event-loop-execute-time: ${max.event-loop.execute-time}

@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"C:/Users/ramon/Documents/Unreal Projects/UnrealTwins/Content/Api.umap",
+				"C:/Users/ramon/Documents/Unreal Projects/UnrealTwins/Content/Blueprints/SensorDataPolling.uasset",
+				"C:/Users/ramon/Documents/Unreal Projects/UnrealTwins/Content/Button_Sensor_Surface_Wandsendermodul_Enocean_mit_Wippe_2441196_body1_Blueprint.uasset",
+				"C:/Users/ramon/Documents/Unreal Projects/UnrealTwins/Content/Blueprints/WidgedBlueprints/StatusWidged.uasset",
+				"C:/Users/ramon/Documents/Unreal Projects/UnrealTwins/Content/APICall.uasset",
+				"C:/Users/ramon/Documents/Unreal Projects/UnrealTwins/Content/Blueprints/WidgedBlueprints/Button_Sensor_Surface_Wandsendermodul_Enocean_mit_Wippe_2441196_body1_Blueprint.uasset"
+			]
+		}
+	]
+}

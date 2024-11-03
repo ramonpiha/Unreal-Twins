@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2016, 2020 Contributors to the Eclipse Foundation
+   
+    See the NOTICE file(s) distributed with this work for additional
+    information regarding copyright ownership.
+   
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0
+   
+    SPDX-License-Identifier: EPL-2.0
+ -->
+
+<!DOCTYPE configuration>
+
+<configuration>
+
+  <!-- 
+    This is the logging configuration that is used by the
+    locally executing integration test cases.
+
+    Any changes made here will be reflected on the next test
+    execution.
+   -->
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="WARN">
+    <appender-ref ref="STDOUT" />
+  </root>
+
+  <variable name="logging.profile" value="${logging.profile:-prod}" />
+  <include resource="logback-test-include-${logging.profile}.xml"/>
+
+  <logger name="org.apache.qpid.jms" level="INFO"/>
+  <!-- 
+    Set the following logger to level TRACE and add a "amqp.traceFrames=true" option to the connection URI
+    in order to trace AMQP frames.
+   -->
+  <logger name="org.apache.qpid.jms.provider.amqp.FRAMES" level="INFO"/>
+  <logger name="io.netty.resolver.dns" level="INFO"/>
+  <logger name="io.vertx.proton.impl" level="INFO"/>
+  <logger name="org.eclipse.californium" level="WARN"/>
+  <logger name="org.eclipse.californium.core" level="WARN"/>
+  <logger name="org.eclipse.californium.scandium" level="WARN"/>
+  <logger name="org.mongodb.driver" level="INFO"/>
+
+</configuration>

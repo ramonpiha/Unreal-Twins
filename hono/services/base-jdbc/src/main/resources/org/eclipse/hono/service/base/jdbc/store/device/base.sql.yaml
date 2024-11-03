@@ -1,0 +1,182 @@
+
+#
+# For other databases, this can be provided using extensions
+# An example for H2 is available at: https://github.com/EnMasseProject/h2-iot-container-images
+#
+
+create: |
+   INSERT INTO %s (
+      tenant_id,
+      device_id,
+      version,
+      data,
+      created,
+      auto_provisioned
+   ) VALUES (
+      :tenant_id,
+      :device_id,
+      :version,
+      :data,
+      :created,
+      :auto_provisioned
+   )
+
+readRegistration: |
+   SELECT
+      device_id,
+      version,
+      data,
+      created,
+      updated_on,
+      auto_provisioned,
+      auto_provisioning_notification_sent
+   FROM
+      %s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+
+updateRegistrationVersioned: |
+   UPDATE %s
+   SET
+      data=:data,
+      version=:next_version,
+      updated_on=:updated_on,
+      auto_provisioning_notification_sent=COALESCE(:auto_provisioning_notification_sent,auto_provisioning_notification_sent)
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+   AND
+      version=:expected_version
+
+delete: |
+   DELETE FROM %s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+
+deleteVersioned: |
+   DELETE FROM %s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+   AND
+      version=:expected_version
+
+dropTenant: |
+   DELETE FROM %s
+   WHERE
+      tenant_id=:tenant_id
+
+readForUpdate: |
+   SELECT
+      version
+   FROM
+      %1$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+   FOR UPDATE
+
+readCredentials: |
+   SELECT
+      data
+   FROM
+      %2$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+
+findCredentials: |
+   SELECT
+      device_id,
+      data
+   FROM
+      %2$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      auth_id=:auth_id
+   AND
+      type=:type
+
+insertCredentialEntry: |
+   INSERT INTO %2$s (
+      tenant_id,
+      device_id,
+      type,
+      auth_id,
+      data
+   ) VALUES (
+      :tenant_id,
+      :device_id,
+      :type,
+      :auth_id,
+      :data
+   )
+
+deleteAllCredentials: |
+   DELETE FROM %2$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+
+updateDeviceVersion: |
+   UPDATE %1$s
+   SET
+      version=:next_version
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+   AND
+      version=:expected_version
+
+resolveGroups: |
+   SELECT
+      device_id
+   FROM
+      %3$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      group_id in (:group_ids)
+
+createMemberOf: |
+   INSERT INTO %3$s (
+      tenant_id,
+      device_id,
+      group_id
+   ) VALUES (
+      :tenant_id,
+      :device_id,
+      :group_id
+   )
+
+deleteAllMemberOf: |
+   DELETE FROM %3$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+
+countDevicesOfTenant: |
+   SELECT COUNT(*) AS deviceCount FROM %1$s
+   WHERE
+      tenant_id=:tenant_id
+
+findDevicesOfTenant: |
+   SELECT * 
+   FROM %s
+   WHERE
+      tenant_id=:tenant_id
+   ORDER BY device_id ASC
+   LIMIT :page_size
+   OFFSET :page_offset

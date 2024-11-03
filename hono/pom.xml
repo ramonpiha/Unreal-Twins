@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2016, 2023 Contributors to the Eclipse Foundation
+
+    See the NOTICE file(s) distributed with this work for additional
+    information regarding copyright ownership.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0
+
+    SPDX-License-Identifier: EPL-2.0
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.eclipse.hono</groupId>
+  <artifactId>hono-parent</artifactId>
+  <version>2.6.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>Hono</name>
+  <description>
+    Eclipse Hono provides remote service interfaces for connecting large numbers of IoT devices to a back end and
+    interacting with them in a uniform way regardless of the device communication protocol.
+  </description>
+  <url>https://www.eclipse.org/hono</url>
+  <inceptionYear>2016</inceptionYear>
+
+  <organization>
+    <name>Eclipse Foundation</name>
+    <url>https://www.eclipse.org/</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>EPL-2.0</name>
+      <url>http://www.eclipse.org/legal/epl-2.0</url>
+      <comments>Eclipse Public License - Version 2.0</comments>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <developerConnection>scm:git:https://github.com/eclipse-hono/hono.git</developerConnection>
+    <url>https://github.com/eclipse-hono/hono</url>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/eclipse-hono/hono/issues</url>
+  </issueManagement>
+
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://github.com/eclipse-hono/hono/actions</url>
+  </ciManagement>
+
+  <distributionManagement>
+    <repository>
+      <id>repo.eclipse.org</id>
+      <name>Hono Releases</name>
+      <url>https://repo.eclipse.org/content/repositories/hono-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>repo.eclipse.org</id>
+      <name>Hono Snapshots</name>
+      <url>https://repo.eclipse.org/content/repositories/hono-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <developers>
+    <developer>
+      <id>khudalla</id>
+      <name>Kai Hudalla</name>
+      <email>kai.hudalla@bosch.io</email>
+      <url>https://github.com/sophokles73</url>
+      <organization>Bosch.IO GmbH</organization>
+      <organizationUrl>https://www.bosch.io</organizationUrl>
+      <roles>
+        <role>Lead</role>
+        <role>Committer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>dbosanac</id>
+      <name>Dejan Bosanac</name>
+      <email>dejan@sensatic.net</email>
+      <roles>
+        <role>Lead</role>
+        <role>Committer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>calohmn</id>
+      <name>Carsten Lohmann</name>
+      <email>carsten.lohmann@bosch.io</email>
+      <organization>Bosch.IO GmbH</organization>
+      <organizationUrl>https://www.bosch.io</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>kaniyan</id>
+      <name>Kartheeswaran Kalidass</name>
+      <email>Kartheeswaran.Kalidass@bosch.io</email>
+      <organization>Bosch.IO GmbH</organization>
+      <organizationUrl>https://www.bosch.io</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+    </developer>
+    <developer>
+      <id>mattkaem</id>
+      <name>Matthias Kämmer</name>
+      <email>m.kaemmer@sotec.eu</email>
+      <organization>SOTEC GmbH &amp; Co KG</organization>
+      <organizationUrl>https://www.sotec.eu</organizationUrl>
+      <roles>
+        <role>Committer</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <properties>
+    <run-java-sh.version>1.3.8</run-java-sh.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+    <maven.compiler.release>17</maven.compiler.release>
+
+    <!--
+      during development we allow dependencies on SNAPSHOT versions,
+      when doing a release build, set this property to false.
+     -->
+    <snapshotDependencyAllowed>true</snapshotDependencyAllowed>
+
+    <!--
+      Needs to be set to true on platforms where no Docker daemon is available.
+    -->
+    <skipDockerTests>${skipTests}</skipDockerTests>
+
+    <!--
+      The organization name to use for our Docker image names.
+     -->
+    <docker.image.org-name>eclipse</docker.image.org-name>
+
+    <!--
+      The Docker registry to use for our Docker image names.
+    -->
+    <docker.registry-name>index.docker.io</docker.registry-name>
+
+    <!--
+      The Docker repository to use for our Docker image names.
+    -->
+    <docker.repository>${docker.registry-name}/${docker.image.org-name}</docker.repository>
+
+    <!--
+      Additional tag which can be defined for custom builds
+     -->
+    <docker.image.additional.tag></docker.image.additional.tag>
+
+    <!-- 
+      By default, do not push container images to registry.
+     -->
+    <docker.skip.push>true</docker.skip.push>
+
+    <!-- skip acquisition of code coverage information when running unit tests by default -->
+    <jacoco.skip>true</jacoco.skip>
+  </properties>
+
+  <modules>
+    <module>adapter-base</module>
+    <module>adapters</module>
+    <module>bom</module>
+    <module>core</module>
+    <module>cli</module>
+    <module>client-device-connection-infinispan</module>
+    <module>clients</module>
+    <module>demo-certs</module>
+    <module>examples</module>
+    <module>legal</module>
+    <module>service-base</module>
+    <module>services</module>
+    <module>site</module>
+    <module>test-utils</module>
+    <module>tests</module>
+  </modules>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>eclipse-cbi-releases</id>
+      <name>Eclipse CBI Repository</name>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <url>https://repo.eclipse.org/content/repositories/cbi-releases/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>docker-maven-plugin</artifactId>
+          <version>0.43.4</version>
+          <executions>
+            <execution>
+              <id>build_images</id>
+              <phase>package</phase>
+              <goals>
+                <goal>build</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>push_image</id>
+              <phase>install</phase>
+              <goals>
+                <goal>push</goal>
+              </goals>
+            </execution>
+          </executions>
+          <dependencies>
+            <dependency>
+              <groupId>io.fabric8</groupId>
+              <artifactId>run-java-sh</artifactId>
+              <version>${run-java-sh.version}</version>
+            </dependency>
+          </dependencies>
+          <configuration>
+            <images>
+              <image>
+                <name>${docker.repository}/%a:%v</name>
+                <build>
+                  <maintainer>The Eclipse Hono project</maintainer>
+                  <labels>
+                    <project>Eclipse Hono</project>
+                  </labels>
+                  <tags>
+                    <tag>${docker.image.additional.tag}</tag>
+                  </tags>
+                  <imagePullPolicy>Always</imagePullPolicy>
+                  <from>${java-base-image.name}</from>
+                </build>
+              </image>
+            </images>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.11.0</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>3.1.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.3.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.3.0</version>
+          <configuration>
+            <skipIfEmpty>true</skipIfEmpty>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.5.0</version>
+          <configuration>
+            <doclint>all,-accessibility</doclint>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <systemPropertyVariables>
+              <!-- use Base64 encoder/decoder that is compatible with vert.x 3 -->
+              <vertx.json.base64>legacy</vertx.json.base64>
+            </systemPropertyVariables>
+            <properties>
+              <configurationParameters>
+                junit.jupiter.execution.parallel.enabled = true
+                junit.jupiter.execution.parallel.mode.default = same_thread
+                junit.jupiter.execution.parallel.mode.classes.default = concurrent
+              </configurationParameters>
+            </properties>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <systemPropertyVariables>
+              <!-- use Base64 encoder/decoder that is compatible with vert.x 3 -->
+              <vertx.json.base64>legacy</vertx.json.base64>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+        <plugin>
+          <!--
+            Copy legal documents from "legal" module to "target/classes" folder
+            so that we make sure to include legal docs in all modules.
+           -->
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.5.0</version>
+          <executions>
+            <execution>
+              <id>copy_legal_docs</id>
+              <phase>prepare-package</phase>
+              <goals>
+                <goal>unpack-dependencies</goal>
+              </goals>
+              <configuration>
+                <includeArtifactIds>hono-legal</includeArtifactIds>
+                <outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+                <includes>legal/**</includes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.3.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.eclipse.hono</groupId>
+              <artifactId>hono-legal</artifactId>
+              <version>${project.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>10.4</version>
+            </dependency>
+          </dependencies>
+          <executions>
+            <execution>
+              <id>checkstyle-check</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <configLocation>checkstyle/default.xml</configLocation>
+            <suppressionsLocation>checkstyle/suppressions.xml</suppressionsLocation>
+            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>properties-maven-plugin</artifactId>
+          <version>1.2.0</version>
+        </plugin>
+        <plugin>
+          <groupId>com.internetitem</groupId>
+          <artifactId>write-properties-file-maven-plugin</artifactId>
+          <version>1.0.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.jboss.jandex</groupId>
+          <artifactId>jandex-maven-plugin</artifactId>
+          <version>1.2.3</version>
+          <executions>
+            <execution>
+              <id>make-index</id>
+              <goals>
+                <goal>jandex</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>0.8.10</version>
+          <executions>
+            <execution>
+              <id>default-prepare-agent</id>
+              <goals>
+                <goal>prepare-agent</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>default-report</id>
+              <goals>
+                <goal>report</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>default_check</id>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <rule>
+                    <element>CLASS</element>
+                    <excludes>
+                      <exclude>*Test</exclude>
+                      <exclude>*IT</exclude>
+                    </excludes>
+                  </rule>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.cbi.maven.plugins</groupId>
+          <artifactId>eclipse-jarsigner-plugin</artifactId>
+          <version>1.3.2</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-gpg-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <!-- Make sure that only non-snapshot versions are used for the dependencies.
+              Only active when property 'snapshotDependencyAllowed' is false. -->
+            <id>enforce-no-snapshots</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <skip>${snapshotDependencyAllowed}</skip>
+              <rules>
+                <requireReleaseDeps>
+                  <message>No dependencies on snapshots allowed!</message>
+                </requireReleaseDeps>
+                <requireReleaseVersion>
+                  <message>Cannot release snapshot version!</message>
+                </requireReleaseVersion>
+              </rules>
+            </configuration>
+          </execution>
+          <execution>
+            <id>enforce-java-17</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>17</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.2.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>no_docker</id>
+      <activation>
+        <property>
+          <name>noDocker</name>
+        </property>
+      </activation>
+      <properties>
+        <!-- this will prevent (unit) tests from being run that require test containers -->
+        <skipDockerTests>true</skipDockerTests>
+      </properties>
+    </profile>
+    <profile>
+      <id>nexus</id>
+      <activation>
+        <property>
+          <name>disableNexus</name>
+          <value>!true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <!--
+              Use the Nexus Staging plugin as a full replacement for the standard
+              Maven Deploy plugin.
+              See https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin
+              why this makes sense :-)
+              We can control whether we want to deploy to the Eclipse repo or Maven Central
+              by a combination of the version being a SNAPHOT or release version and property
+              skipStaging=true/false.
+              In any case we can take advantage of the plugin's "deferred deploy" feature which
+              makes sure that all artifacts of a multi-module project are deployed as a whole
+              at the end of the build process instead of deploying each module's artifacts
+              individually as part of building the module.
+             -->
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.8</version>
+            <extensions>true</extensions>
+            <configuration>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <autoReleaseAfterClose>false</autoReleaseAfterClose>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <!-- apparently this needs to be exactly this version to work with Java 17 -->
+                <!-- https://stackoverflow.com/a/70157413/6138465 -->
+                <version>1.4.15</version> 
+              </dependency>
+            </dependencies>
+            </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <!--
+        This profile is activated by Eclipse IDE automatically.
+       -->
+      <id>eclipse-only</id>
+      <activation>
+        <property>
+          <name>m2e.version</name>
+        </property>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <!--
+                This plugin's configuration is used to store Eclipse m2e settings only.
+                It has no influence on the Maven build itself.
+              -->
+              <groupId>org.eclipse.m2e</groupId>
+              <artifactId>lifecycle-mapping</artifactId>
+              <version>1.0.0</version>
+                <configuration>
+                  <lifecycleMappingMetadata>
+                    <pluginExecutions>
+                      <pluginExecution>
+                        <!--
+                         Disable unpack-dependencies goal in order to prevent the m2eclipse
+                         error "Artifact has not been packaged yet..."
+                         -->
+                        <pluginExecutionFilter>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-dependency-plugin</artifactId>
+                          <versionRange>[3,)</versionRange>
+                          <goals>
+                            <goal>unpack-dependencies</goal>
+                          </goals>
+                        </pluginExecutionFilter>
+                        <action>
+                          <ignore></ignore>
+                        </action>
+                      </pluginExecution>
+                    </pluginExecutions>
+                  </lifecycleMappingMetadata>
+                </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <!--
+        this profile generates JavaDoc jar files
+        sub-modules can set property maven.javadoc.skip=true in order to skip this
+        (e.g., the tests, application and example modules, which do not require JavaDoc being generated)
+      -->
+      <id>javadoc</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>createJavadoc</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+	            <execution>
+	              <id>attach-javadocs</id>
+	              <goals>
+	                <goal>jar</goal>
+	             </goals>
+	            </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <!-- this profile signs artifacts so that they can be deployed to repo.eclipse.org -->
+      <id>eclipse_jar_signing</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>enableEclipseJarSigner</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.cbi.maven.plugins</groupId>
+            <artifactId>eclipse-jarsigner-plugin</artifactId>
+            <configuration>
+              <excludeInnerJars>true</excludeInnerJars>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-jars</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <!-- this profile generates GPG signatures -->
+      <id>create_gpg_signature</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+        <property>
+          <name>createGPGSignature</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <gpgArguments>
+                <arg>--pinentry-mode</arg>
+                <arg>loopback</arg>
+              </gpgArguments>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>docker-push-image</id>
+      <properties>
+        <docker.skip.push>false</docker.skip.push>
+      </properties>
+    </profile>
+    <profile>
+      <id>docker-multiarch-build</id>
+      <properties>
+        <docker.buildx.dockerStateDir>~/.docker</docker.buildx.dockerStateDir>
+        <docker.buildx.builderName>maven</docker.buildx.builderName>
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>io.fabric8</groupId>
+              <artifactId>docker-maven-plugin</artifactId>
+              <configuration>
+                <images>
+                  <image>
+                    <build>
+                      <buildx>
+                        <dockerStateDir>${docker.buildx.dockerStateDir}</dockerStateDir>
+                        <builderName>${docker.buildx.builderName}</builderName>
+                        <platforms>
+                          <platform>linux/amd64</platform>
+                          <platform>linux/arm64</platform>
+                        </platforms>
+                      </buildx>
+                    </build>
+                  </image>
+                </images>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+  </profiles>
+</project>

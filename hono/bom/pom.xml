@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2016, 2023 Contributors to the Eclipse Foundation
+
+    See the NOTICE file(s) distributed with this work for additional
+    information regarding copyright ownership.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0
+
+    SPDX-License-Identifier: EPL-2.0
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.eclipse.hono</groupId>
+    <artifactId>hono-parent</artifactId>
+    <version>2.6.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>hono-bom</artifactId>
+  <packaging>pom</packaging>
+
+  <name>Hono Dependencies</name>
+  <description>A "bill-of-materials" for Hono.</description>
+
+  <properties>
+    <artemis.image.name>quay.io/artemiscloud/activemq-artemis-broker:1.0.6</artemis.image.name>
+    <assertj.version>3.24.2</assertj.version>
+    <californium.version>3.10.0</californium.version>
+    <cryptvault.version>1.0.2</cryptvault.version>
+    <dispatch-router.image.name>quay.io/interconnectedcloud/qdrouterd:1.17.1</dispatch-router.image.name>
+    <guava.version>32.1.2-jre</guava.version>
+    <infinispan.version>14.0.11.Final</infinispan.version>
+    <infinispan-image.name>quay.io/infinispan/server-native:13.0.12.Final</infinispan-image.name>
+    <jaeger.image.name>docker.io/jaegertracing/all-in-one:1.51</jaeger.image.name>
+    <javax.transaction-api.version>1.3</javax.transaction-api.version>
+    <java-base-image.name>docker.io/library/eclipse-temurin:17-jre-jammy</java-base-image.name>
+    <jjwt.version>0.11.5</jjwt.version>
+    <kafka.image.name>docker.io/confluentinc/cp-kafka:7.5.0</kafka.image.name>
+    <logback.version>1.4.12</logback.version>
+    <mongodb-image.name>docker.io/library/mongo:6.0</mongodb-image.name>
+    <native.image.name>quay.io/quarkus/quarkus-micro-image:2.0</native.image.name>
+    <native.builder-image.name>mandrel</native.builder-image.name>
+    <postgresql-image.name>docker.io/library/postgres:14-alpine</postgresql-image.name>
+    <qpid-jms.version>1.10.0</qpid-jms.version>
+    <quarkus.platform.version>3.2.9.Final</quarkus.platform.version>
+    <slf4j.version>2.0.6</slf4j.version>
+    <spring-security-crypto.version>6.1.4</spring-security-crypto.version>
+    <truth.version>1.1.3</truth.version>
+
+    <!-- The port at which the health check server should expose its resources -->
+    <health.check.port>8088</health.check.port>
+    <health.check.non-application-root-path>/</health.check.non-application-root-path>
+    <health.check.root-path>/</health.check.root-path>
+    <health.check.liveness-path>liveness</health.check.liveness-path>
+    <health.check.readiness-path>readiness</health.check.readiness-path>
+    <health.check.startup-path>started</health.check.startup-path>
+
+    <!--
+      These properties will be copied into the application.properties of all service components and
+      adapters.
+    -->
+    <quarkus.application.properties>
+quarkus.http.non-application-root-path=${health.check.non-application-root-path}
+quarkus.http.port=${health.check.port}
+quarkus.log.console.json=false
+# this needs to be configured at build time in order for native images to be able to log at TRACE level
+quarkus.log.min-level=TRACE
+quarkus.micrometer.binder-enabled-default=false
+quarkus.micrometer.binder.jvm=true
+# Kafka client metrics are being managed explicitly by MicrometerKafkaClientMetricsSupport
+quarkus.micrometer.binder.kafka.enabled=false
+quarkus.micrometer.binder.system=true
+quarkus.micrometer.binder.vertx.enabled=true
+quarkus.micrometer.export.prometheus.path=/prometheus
+quarkus.smallrye-health.root-path=${health.check.root-path}
+quarkus.smallrye-health.liveness-path=${health.check.liveness-path}
+quarkus.smallrye-health.readiness-path=${health.check.readiness-path}
+quarkus.smallrye-health.startup-path=${health.check.startup-path}
+quarkus.vertx.prefer-native-transport=true
+quarkus.vertx.resolver.cache-max-time-to-live=0
+    </quarkus.application.properties>
+
+    <!-- Local dev and test mode  support -->
+    <!-- Fixed ports used when starting hono services/adapters locally or with fixed ports -->
+    <fixed.auth.amqps.port>5673</fixed.auth.amqps.port>
+    <fixed.auth.amqp.port>5674</fixed.auth.amqp.port> <!-- Reserved - not used -->
+    <fixed.deviceregistry.amqps.port>5675</fixed.deviceregistry.amqps.port> <!-- Reserved - not used -->
+    <fixed.deviceregistry.amqp.port>5676</fixed.deviceregistry.amqp.port>
+    <fixed.deviceregistry.http.port>1080</fixed.deviceregistry.http.port>
+    <fixed.deviceregistry.https.port>1443</fixed.deviceregistry.https.port> <!-- Reserved - not used -->
+    <fixed.commandrouter.amqps.port>5677</fixed.commandrouter.amqps.port> <!-- Reserved - not used -->
+    <fixed.commandrouter.amqp.port>5678</fixed.commandrouter.amqp.port>
+
+    <fixed.http.adapter.port>8080</fixed.http.adapter.port>
+    <fixed.https.adapter.port>8443</fixed.https.adapter.port>
+    <fixed.mqtt.adapter.port>1883</fixed.mqtt.adapter.port>
+    <fixed.mqtts.adapter.port>8883</fixed.mqtts.adapter.port>
+    <fixed.amqp.adapter.port>5672</fixed.amqp.adapter.port>
+    <fixed.amqps.adapter.port>5671</fixed.amqps.adapter.port>
+    <fixed.coap.adapter.port>5683</fixed.coap.adapter.port>
+    <fixed.coaps.adapter.port>5684</fixed.coaps.adapter.port>
+    <fixed.lora.adapter.port>2080</fixed.lora.adapter.port>
+    <fixed.loras.adapter.port>2443</fixed.loras.adapter.port>
+
+    <hono.infinispan.host>hono-data-grid</hono.infinispan.host>
+    <hono.infinispan.port>11222</hono.infinispan.port>
+    <hono.infinispan.username>hono</hono.infinispan.username>
+    <hono.infinispan.password>hono-secret</hono.infinispan.password>
+
+    <kafka-client.producer.max-block-ms>3500</kafka-client.producer.max-block-ms>
+    <kafka-client.producer.request-timeout-ms>4000</kafka-client.producer.request-timeout-ms>
+    <kafka-client.producer.delivery-timeout-ms>6000</kafka-client.producer.delivery-timeout-ms>
+
+    <quarkus.application-dev.properties>
+hono.auth=${hono.auth}
+hono.auth.host=${docker.host.address:localhost}
+hono.auth.port=${fixed.auth.amqps.port}
+hono.auth.name=${app.id}
+hono.auth.trustStorePath=../../demo-certs/certs/trusted-certs.pem
+hono.auth.validation.certPath=../../demo-certs/certs/auth-server-cert.pem
+hono.auth.jwksPollingInterval=PT20S
+
+# limit to a single service instance
+hono.app.maxInstances=1
+hono.app.amqpMessagingDisabled=${hono.amqp-messaging.disabled:true}
+hono.app.kafkaMessagingDisabled=${hono.kafka-messaging.disabled:false}
+
+hono.kafka.commonClientConfig."bootstrap.servers"=${docker.host.address:localhost}:${kafka.port:9094}
+
+# AMQP connection to central AMQP message broker if configured
+#hono.command.hostnameVerificationRequired=false
+hono.command.host=${docker.host.address:localhost}
+hono.command.port=${qpid.amqps.port:15671}
+hono.command.amqpHostname=hono-internal
+hono.command.keyPath=../../demo-certs/certs/${app.id}-key.pem
+hono.command.certPath=../../demo-certs/certs/${app.id}-cert.pem
+hono.command.trustStorePath=../../demo-certs/certs/trusted-certs.pem
+#hono.command.trustStorePassword=../../demo-certs/certs/trust-store-password
+hono.command.linkEstablishmentTimeout=${link.establishment.timeout:5000}
+hono.command.flowLatency=${flow.latency:1000}
+hono.command.requestTimeout=${request.timeout:1000}
+
+hono.registration.host=localhost
+hono.registration.port=${fixed.deviceregistry.amqp.port}
+hono.registration.username=${app.id}@HONO
+hono.registration.password=${short.name}-secret
+hono.registration.linkEstablishmentTimeout=${link.establishment.timeout:5000}
+hono.registration.flowLatency=${flow.latency:1000}
+hono.registration.requestTimeout=${request.timeout:1000}
+
+hono.tenant.host=localhost
+hono.tenant.port=${fixed.deviceregistry.amqp.port}
+hono.tenant.username=${app.id}@HONO
+hono.tenant.password=${short.name}-secret
+hono.tenant.linkEstablishmentTimeout=${link.establishment.timeout:5000}
+hono.tenant.flowLatency=${flow.latency:1000}
+hono.tenant.requestTimeout=${request.timeout:1000}
+
+hono.credentials.host=localhost
+hono.credentials.port=${fixed.deviceregistry.amqp.port}
+hono.credentials.username=${app.id}@HONO
+hono.credentials.password=${short.name}-secret
+hono.credentials.linkEstablishmentTimeout=${link.establishment.timeout:5000}
+hono.credentials.flowLatency=${flow.latency:1000}
+hono.credentials.requestTimeout=${request.timeout:1000}
+
+hono.commandRouter.host=${docker.host.address:localhost}
+hono.commandRouter.port=${fixed.commandrouter.amqp.port}
+hono.commandRouter.username=${app.id}@HONO
+hono.commandRouter.password=${short.name}-secret
+hono.commandRouter.linkEstablishmentTimeout=${link.establishment.timeout:5000}
+hono.commandRouter.flowLatency=${flow.latency:1000}
+hono.commandRouter.requestTimeout=${request.timeout:2000}
+
+# Tracing
+# set to "always_on" to report every tracing span,
+otel.traces.sampler=always_off
+otel.traces.sampler.arg=endpoint=http://${docker.host.address:localhost}:4317
+
+# Disable dev services - start them manually
+quarkus.devservices.enabled=false
+# app id
+quarkus.application.name=${app.id}
+# console color, also applies to console logging
+quarkus.console.color=true
+# Log setup
+quarkus.log.level=INFO
+quarkus.log.category."io.quarkus.vertx.core.runtime".level=DEBUG
+quarkus.log.category."org.eclipse.hono".level=${hono.debug.level:INFO}
+# Max exec time
+quarkus.vertx.max-event-loop-execute-time=${max.event-loop.execute-time:20000}
+    </quarkus.application-dev.properties>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!--
+        First we import managed dependencies defined by Quarkus
+        and then override with Hono specific versions further down below.
+      -->
+      <dependency>
+        <groupId>io.quarkus.platform</groupId>
+        <artifactId>quarkus-bom</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>io.quarkus.platform</groupId>
+        <artifactId>quarkus-google-cloud-services-bom</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- exclude Quarkus IDE launcher -->
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-arc</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <scope>compile</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-ide-launcher</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-core</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-ide-launcher</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-kafka-client</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-ide-launcher</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-vertx</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-ide-launcher</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-resteasy-reactive</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.ws.rs</groupId>
+            <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-junit5</artifactId>
+        <version>${quarkus.platform.version}</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-ide-launcher</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!-- Hono components -->
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-legal</artifactId>
+        <version>${project.version}</version>
+        <scope>provided</scope>
+        <optional>true</optional>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-demo-certs</artifactId>
+        <version>${project.version}</version>
+        <scope>provided</scope>
+        <optional>true</optional>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-amqp-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-amqp-connection</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-kafka-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-pubsub-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-command</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-command-amqp</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-command-kafka</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-command-pubsub</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-device-amqp</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-registry</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-registry-amqp</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-telemetry</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-telemetry-amqp</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-telemetry-kafka</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-telemetry-pubsub</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-adapter-base</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-adapter-coap</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-service-base</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-service-device-registry-base</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-service-device-registry-mongodb-base</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-service-base-jdbc</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-service-command-router</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>client-device-connection-infinispan</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-application</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-application-amqp</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-application-kafka</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-notification</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-notification-amqp</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-notification-kafka</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>hono-client-notification-pubsub</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <!-- Californium -->
+      <dependency>
+        <groupId>org.eclipse.californium</groupId>
+        <artifactId>californium-core</artifactId>
+        <version>${californium.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.californium</groupId>
+        <artifactId>element-connector</artifactId>
+        <version>${californium.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.californium</groupId>
+        <artifactId>scandium</artifactId>
+        <version>${californium.version}</version>
+      </dependency>
+
+      <!-- Spring -->
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-crypto</artifactId>
+        <version>${spring-security-crypto.version}</version>
+      </dependency>
+
+      <!-- Logging -->
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl-over-slf4j</artifactId>
+        <version>${slf4j.version}</version>
+      </dependency>
+
+      <!-- Other -->
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+        <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.guava</groupId>
+            <artifactId>listenablefuture</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_annotations</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.google.j2objc</groupId>
+            <artifactId>j2objc-annotations</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>animal-sniffer-annotations</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-annotations</artifactId>
+        <version>4.7.1</version>
+        <optional>true</optional>
+        <scope>provided</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.bol</groupId>
+        <artifactId>cryptvault</artifactId>
+        <version>${cryptvault.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.transaction</groupId>
+        <artifactId>javax.transaction-api</artifactId>
+        <version>${javax.transaction-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-core</artifactId>
+        <version>${infinispan.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.infinispan</groupId>
+        <artifactId>infinispan-client-hotrod</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-epoll</artifactId>
+          </exclusion>
+        </exclusions>
+        <version>${infinispan.version}</version>
+      </dependency>
+
+      <!-- Testing -->
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>core-test-utils</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>client-test-utils</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>adapter-base-test-utils</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.hono</groupId>
+        <artifactId>kafka-test-utils</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.qpid</groupId>
+        <artifactId>qpid-jms-client</artifactId>
+        <version>${qpid-jms.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>${assertj.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.truth</groupId>
+        <artifactId>truth</artifactId>
+        <version>${truth.version}</version>
+        <scope>test</scope>
+        <!-- exclude JUnit 4, see https://github.com/google/truth/issues/333 -->
+        <exclusions>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-maven-plugin</artifactId>
+          <version>${quarkus.platform.version}</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>build</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>

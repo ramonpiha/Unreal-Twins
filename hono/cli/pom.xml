@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+   
+    See the NOTICE file(s) distributed with this work for additional
+    information regarding copyright ownership.
+   
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License 2.0 which is available at
+    http://www.eclipse.org/legal/epl-2.0
+   
+    SPDX-License-Identifier: EPL-2.0
+ -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.eclipse.hono</groupId>
+    <artifactId>hono-bom</artifactId>
+    <version>2.6.0-SNAPSHOT</version>
+    <relativePath>../bom</relativePath>
+  </parent>
+
+  <artifactId>hono-cli</artifactId>
+  <name>Hono command-line interface</name>
+  <url>https://www.eclipse.org/hono</url>
+
+  <description>Quarkus based Hono Command line Interface</description>
+
+  <properties>
+    <!-- 
+      this property prevents the Nexus Staging Maven Plugin to
+      deploy this module's artifacts to Maven Central' staging repo
+     -->
+    <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
+    <!-- 
+      this property prevents the Nexus Staging Maven Plugin to
+      deploy this module's artifacts to the configured project repository
+     -->
+    <skipStaging>true</skipStaging>
+    <maven.install.skip>true</maven.install.skip>
+    <maven.source.skip>true</maven.source.skip>
+    <maven.javadoc.skip>true</maven.javadoc.skip>
+    <gpg.skip>true</gpg.skip>
+    <quarkus.package.type>uber-jar</quarkus.package.type>
+    <quarkus.package.runner-suffix>-exec</quarkus.package.runner-suffix>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>hono-legal</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-picocli</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-vertx</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-config-yaml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-kafka-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>hono-client-common</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>io.vertx</groupId>
+          <artifactId>vertx-health-check</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>hono-client-device-amqp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>hono-client-kafka-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>hono-client-application-amqp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>hono-client-application-kafka</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>info.picocli</groupId>
+      <artifactId>picocli-shell-jline3</artifactId>
+      <version>4.7.4</version>
+    </dependency>
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.fusesource.jansi</groupId>
+      <artifactId>jansi</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.juniversalchardet</groupId>
+      <artifactId>juniversalchardet</artifactId>
+      <version>1.0.3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <!-- testing -->
+    <dependency>
+      <groupId>com.google.truth</groupId>
+      <artifactId>truth</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.hono</groupId>
+      <artifactId>core-test-utils</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+
+  <build>
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.jboss.jandex</groupId>
+        <artifactId>jandex-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>io.quarkus</groupId>
+        <artifactId>quarkus-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+
+    <profile>
+      <id>build-cli-native-executable</id>
+      <!-- 
+        This profile can be used to build a native executable from the hono-cli jar file.
+      -->
+      <properties>
+        <quarkus.package.type>native</quarkus.package.type>
+        <quarkus.native.builder-image>${native.builder-image.name}</quarkus.native.builder-image>
+        <!--
+          By default, use container based build which does not require local installation of the GraalVM SDK
+          and native-image compiler.
+        -->
+        <quarkus.native.remote-container-build>true</quarkus.native.remote-container-build>
+        <!--  include all JSSE related classes -->
+        <quarkus.native.enable-all-security-services>true</quarkus.native.enable-all-security-services>
+        <quarkus.native.resources.includes>hono-cli-build.properties</quarkus.native.resources.includes>
+        <quarkus.native.additional-build-args>--initialize-at-run-time=org.jline.nativ.JLineLibrary</quarkus.native.additional-build-args>
+      </properties>
+    </profile>
+  </profiles>
+</project>

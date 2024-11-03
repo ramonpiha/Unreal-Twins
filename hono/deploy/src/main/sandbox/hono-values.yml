@@ -1,0 +1,262 @@
+#
+# Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+#
+# See the NOTICE file(s) distributed with this work for additional
+# information regarding copyright ownership.
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+
+useLoadBalancer: true
+
+messagingNetworkTypes:
+- "amqp"
+- "kafka"
+
+amqpMessagingNetworkExample:
+  enabled: true
+  insecurePortEnabled: false
+  dispatchRouter:
+    uidFormat: "n"
+    adapterUids: "hono.eclipseprojects.io"
+    tlsKeysSecret: "sandbox-tls"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "64Mi"
+      limits:
+        cpu: "1"
+        memory: "256Mi"
+  broker:
+    artemis:
+      resources:
+        requests:
+          cpu: "50m"
+          memory: "600Mi"
+        limits:
+          cpu: "1"
+          memory: "600Mi"
+
+adapters:
+  http:
+    enabled: true
+    imageName: "eclipse/hono-adapter-http-native"
+    hono:
+      http:
+        insecurePortEnabled: false
+        bindAddress: "0.0.0.0"
+        keyPath: "/opt/hono/tls/tls.key"
+        certPath: "/opt/hono/tls/tls.crt"
+        idleTimeout: 20
+        jmsVendorPropsEnabled: true
+        maxPayloadSize: 8096
+        tenantIdleTimeout: "1h"
+    tlsKeysSecret: "sandbox-tls"
+    cmdLineArgs:
+    - "-Xmx96m"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "120Mi"
+      limits:
+        memory: "120Mi"
+
+  mqtt:
+    enabled: true
+    imageName: "eclipse/hono-adapter-mqtt-native"
+    hono:
+      mqtt:
+        insecurePortEnabled: false
+        bindAddress: "0.0.0.0"
+        keyPath: "/opt/hono/tls/tls.key"
+        certPath: "/opt/hono/tls/tls.crt"
+        jmsVendorPropsEnabled: true
+        maxPayloadSize: 8096
+        tenantIdleTimeout: "1h"
+        maxConnections: 200
+    tlsKeysSecret: "sandbox-tls"
+    cmdLineArgs:
+    - "-Xmx96m"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "120Mi"
+      limits:
+        memory: "120Mi"
+
+  amqp:
+    enabled: true
+    imageName: "eclipse/hono-adapter-amqp-native"
+    hono:
+      amqp:
+        insecurePortEnabled: false
+        bindAddress: "0.0.0.0"
+        keyPath: "/opt/hono/tls/tls.key"
+        certPath: "/opt/hono/tls/tls.crt"
+        tenantIdleTimeout: "1h"
+        maxConnections: 200
+    tlsKeysSecret: "sandbox-tls"
+    cmdLineArgs:
+    - "-Xmx96m"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "120Mi"
+      limits:
+        memory: "120Mi"
+
+  coap:
+    enabled: true
+    imageName: "eclipse/hono-adapter-coap-native"
+    hono:
+      coap:
+        insecurePortEnabled: false
+        bindAddress: "0.0.0.0"
+        port: 5684
+        keyPath: "/opt/hono/tls/tls.key"
+        certPath: "/opt/hono/tls/tls.crt"
+        tenantIdleTimeout: "1h"
+    tlsKeysSecret: "sandbox-tls"
+    cmdLineArgs:
+    - "-Xmx96m"
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "120Mi"
+      limits:
+        memory: "120Mi"
+
+  kura:
+    enabled: false
+
+  lora:
+    enabled: false
+
+  amqpMessagingNetworkSpec:
+    keyPath: "/opt/hono/tls/tls.key"
+    certPath: "/opt/hono/tls/tls.crt"
+    hostnameVerificationRequired: false
+  commandAndControlSpec:
+    keyPath: "/opt/hono/tls/tls.key"
+    certPath: "/opt/hono/tls/tls.crt"
+    hostnameVerificationRequired: false
+
+authServer:
+  imageName: "eclipse/hono-service-auth-native"
+  cmdLineArgs:
+  - "-Xmx48m"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "60Mi"
+    limits:
+      cpu:
+      memory: "60Mi"
+
+deviceRegistryExample:
+  type: "embedded"
+  hono:
+    registry:
+      amqp:
+        bindAddress: "0.0.0.0"
+        keyPath: "/opt/hono/tls/tls.key"
+        certPath: "/opt/hono/tls/tls.crt"
+      http:
+        authenticationRequired: false
+        insecurePortEnabled: false
+        bindAddress: "0.0.0.0"
+        keyPath: "/opt/hono/tls/tls.key"
+        certPath: "/opt/hono/tls/tls.crt"
+      svc:
+        maxDevicesPerTenant: 10
+  tlsKeysSecret: "sandbox-tls"
+  embeddedJdbcDeviceRegistry:
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "400Mi"
+      limits:
+        cpu:
+        memory: "400Mi"
+
+dataGridExample:
+  enabled: true
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "100Mi"
+    limits:
+      cpu: "1"
+      memory: "200Mi"
+
+commandRouterService:
+  imageName: "eclipse/hono-service-command-router-native"
+  tlsKeysSecret: "sandbox-tls"
+  cmdLineArgs:
+  - "-Xmx96m"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "120Mi"
+    limits:
+      memory: "120Mi"
+
+kafka:
+  ## @param logFlushIntervalMessages The number of messages to accept before forcing a flush of data to disk
+  ##
+  logFlushIntervalMessages: _1000
+  ## @param logFlushIntervalMs The maximum amount of time a message can sit in a log before we force a flush
+  ##
+  logFlushIntervalMs: 1000
+  ## @param logRetentionBytes A size-based retention policy for logs
+  ## 10MB
+  logRetentionBytes: _10485760
+  ## @param logRetentionCheckIntervalMs The interval at which log segments are checked to see if they can be deleted
+  ##
+  logRetentionCheckIntervalMs: 300000
+  ## @param logRetentionHours The minimum age of a log file to be eligible for deletion due to age
+  ##
+  logRetentionHours: 1
+  ## @param logSegmentBytes The maximum size of a log segment file. When this size is reached a new log segment will be created
+  ## 10MB
+  logSegmentBytes: _10485760
+  auth:
+    tls:
+      type: "pem"
+      pemChainIncluded: true
+      existingSecrets:
+      - "sandbox-tls"
+  externalAccess:
+    autoDiscovery:
+      enabled: false
+    service:
+      type: "LoadBalancer"
+      loadBalancerIPs:
+      - "hono.eclipseprojects.io"
+      nodePorts: []
+  serviceAccount:
+    create: false
+  rbac:
+    create: false
+  heapOpts: "-Xms650M -Xmx650M"
+  resources:
+    requests:
+      cpu: "50m"
+      memory: "800Mi"
+    limits:
+      memory: "800Mi"
+  zookeeper:
+    heapSize: 300
+    resources:
+      requests:
+        cpu: "50m"
+        memory: "400Mi"
+      limits:
+        memory: "400Mi"
+
+jaegerBackendExample:
+  enabled: false

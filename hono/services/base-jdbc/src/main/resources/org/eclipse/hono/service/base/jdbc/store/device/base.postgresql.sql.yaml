@@ -1,0 +1,127 @@
+create: |
+   INSERT INTO %s (
+      tenant_id,
+      device_id,
+      version,
+      data,
+      created,
+      auto_provisioned
+   ) VALUES (
+      :tenant_id,
+      :device_id,
+      :version,
+      :data::jsonb,
+      :created,
+      :auto_provisioned
+   )
+
+updateRegistrationVersioned: |
+   UPDATE %s
+   SET
+      data=:data::jsonb,
+      version=:next_version,
+      updated_on=:updated_on,
+      auto_provisioning_notification_sent=COALESCE(:auto_provisioning_notification_sent,auto_provisioning_notification_sent)
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id=:device_id
+   AND
+      version=:expected_version
+
+insertCredentialEntry: |
+   INSERT INTO %2$s (
+      tenant_id,
+      device_id,
+      type,
+      auth_id,
+      data
+   ) VALUES (
+      :tenant_id,
+      :device_id,
+      :type,
+      :auth_id,
+      :data::jsonb
+   )
+
+resolveGroups: |
+   SELECT
+      device_id
+   FROM
+      %3$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      group_id in (select unnest((string_to_array(:group_ids,','))::varchar[]))
+
+countDevicesOfTenantWithFilter: |
+   SELECT COUNT(*) AS deviceCount FROM %1$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+     data->>:field LIKE CAST(:value AS VARCHAR) OR
+     jsonb_extract_path(data,'ext')->>:field LIKE CAST(:value as varchar)
+
+countGatewaysOfTenant: |
+   SELECT COUNT(*) AS deviceCount FROM %1$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id IN (
+         SELECT replace(dr.device_id::text, '"', '') FROM (
+            SELECT jsonb_array_elements(data -> 'via') AS device_id FROM device_registrations 
+                  WHERE tenant_id=:tenant_id AND data ->> 'via' != '') 
+         as dr) 
+
+countOnlyDevicesOfTenant: |
+   SELECT COUNT(*) AS deviceCount FROM %1$s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id NOT IN (
+         SELECT replace(dr.device_id::text, '"', '') FROM (
+            SELECT jsonb_array_elements(data -> 'via') AS device_id FROM device_registrations 
+                   WHERE tenant_id=:tenant_id AND data ->> 'via' != '') 
+         as dr) 
+
+findDevicesOfTenantWithFilter: |
+   SELECT *
+   FROM %s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+     data->>:field LIKE CAST(:value AS VARCHAR) OR
+   jsonb_extract_path(data,'ext')->>:field LIKE CAST(:value as varchar)
+   ORDER BY device_id ASC
+   LIMIT :page_size
+   OFFSET :page_offset
+
+findGatewaysOfTenant: |
+   SELECT *
+   FROM %s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id IN (
+         SELECT replace(dr.device_id::text, '"', '') FROM (
+            SELECT jsonb_array_elements(data -> 'via') AS device_id FROM device_registrations 
+                  WHERE tenant_id=:tenant_id AND data ->> 'via' != '') 
+         as dr) 
+   ORDER BY device_id ASC
+   LIMIT :page_size
+   OFFSET :page_offset
+
+findOnlyDevicesOfTenant: |
+   SELECT *
+   FROM %s
+   WHERE
+      tenant_id=:tenant_id
+   AND
+      device_id NOT IN (
+         SELECT replace(dr.device_id::text, '"', '') FROM (
+            SELECT jsonb_array_elements(data -> 'via') AS device_id FROM device_registrations 
+                  WHERE tenant_id=:tenant_id AND data ->> 'via' != '') 
+         as dr) 
+   ORDER BY device_id ASC
+   LIMIT :page_size
+   OFFSET :page_offset
